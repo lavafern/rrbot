@@ -9,6 +9,8 @@ const {DOCKER_VOLUME_PATH} = process.env
 module.exports = {
     async downloadFile (msg) {
         try {
+            let zipFile = `http://localhost:8081/bot${token}/getFile?file_id=${msg.document.file_id}`;
+
             zipFile = await axios.get(zipFile)
 
             filePath = zipFile.data.result.file_path
@@ -29,11 +31,12 @@ module.exports = {
 
         const password = pass !== 'no' ? pass : ''
         try {
+
+            if (!fs.existsSync('.\\unzipped')) fs.mkdirSync('.\\unzipped');
             const targetDir = '.\\unzipped\\'+filename
 
-            if (!fs.existsSync(targetDir)) {
-                fs.mkdirSync(targetDir);
-            }
+            if (!fs.existsSync(targetDir)) fs.mkdirSync(targetDir);
+
 
             await unrar(filepath, targetDir, {
                 password: password
